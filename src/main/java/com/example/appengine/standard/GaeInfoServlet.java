@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -45,7 +46,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 public class GaeInfoServlet extends HttpServlet {
 
   private final String[] metaPath = {
-    "/computeMetadata/v1/project/numeric-project-id", 
+    "/computeMetadata/v1/project/numeric-project-id",
     "/computeMetadata/v1/project/project-id",
     "/computeMetadata/v1/instance/zone",
     "/computeMetadata/v1/instance/service-accounts/default/aliases",
@@ -123,56 +124,8 @@ public class GaeInfoServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    String key;
-    WebContext ctx = new WebContext(req, resp, getServletContext(), req.getLocale());
-
-    resp.setContentType("text/html");
-
-    TreeMap<String, String> m = new TreeMap<>();
-
-    for (Enumeration<String> e = req.getHeaderNames(); e.hasMoreElements();) {
-      key = e.nextElement();
-      m.put(key, req.getHeader(key));
+    try (PrintWriter writer = resp.getWriter()) {
+      writer.println("Hoi");
     }
-    ctx.setVariable("headers", m);
-
-    Cookie[] cookies = req.getCookies();
-    m = new TreeMap<>();
-    if (cookies != null && cookies.length != 0) {
-      for (Cookie co : cookies) {
-        m.put(co.getName(), co.getValue());
-      }
-    }
-    ctx.setVariable("cookies", m);
-
-    Properties properties = System.getProperties();
-    m = new TreeMap<>();
-    for (Enumeration e = properties.propertyNames(); e.hasMoreElements();) {
-      key = (String) e.nextElement();
-      m.put(key, (String) properties.get(key));
-    }
-    ctx.setVariable("systemprops", m);
-
-    Map<String, String> envVar = System.getenv();
-    m = new TreeMap<>(envVar);
-    ctx.setVariable("envvar", m);
-
-    // The metadata server is only on a production system
-    m = new TreeMap<>();
-    for (String k : metaPath) {
-      m.put(k, fetchMetadata(k));
-    }
-    ctx.setVariable("Metadata", m.descendingMap());
-
-    ctx.setVariable("sam", m.descendingMap());
-
-    // Recursivly get all info about service accounts -- Note tokens are leftout by default.
-    ctx.setVariable(
-            "rsa",
-            fetchJsonMetadata("/computeMetadata/v1/instance/service-accounts/?recursive=true"));
-    // Recursivly get all data on Metadata server.
-    ctx.setVariable("ram", fetchJsonMetadata("/?recursive=true"));
-
-    templateEngine.process("index", ctx, resp.getWriter());
   }
 }
