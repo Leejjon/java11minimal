@@ -15,6 +15,8 @@
  */
 package com.example.appengine.standard;
 
+import com.example.appengine.standard.counter.ShardedCounter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +35,7 @@ public class GaeInfoServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     try (PrintWriter writer = resp.getWriter()) {
-      writer.println("Hoi");
+      writer.println("Hoi " + new ShardedCounter().getCount());
     }
   }
 }

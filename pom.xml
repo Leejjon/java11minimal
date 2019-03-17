@@ -36,6 +36,12 @@ Copyright 2019 Google Inc.
       <version>1</version>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-datastore</artifactId>
+      <version>LATEST</version>
+    </dependency>
     
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -103,7 +109,7 @@ Copyright 2019 Google Inc.
         <version>2.0.0-rc5</version>
         <configuration>
           <deploy.projectId>nodejs-static</deploy.projectId>
-          <version>gaeinfo</version>
+          <version>gaeinfo2</version>
           <promote>false</promote>
         </configuration>
       </plugin>
