@@ -15,27 +15,12 @@
  */
 package com.example.appengine.standard;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 @SuppressWarnings({"serial"})
 @WebServlet(
@@ -44,83 +29,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
         urlPatterns = "/"
 )
 public class GaeInfoServlet extends HttpServlet {
-
-  private final String[] metaPath = {
-    "/computeMetadata/v1/project/numeric-project-id",
-    "/computeMetadata/v1/project/project-id",
-    "/computeMetadata/v1/instance/zone",
-    "/computeMetadata/v1/instance/service-accounts/default/aliases",
-    "/computeMetadata/v1/instance/service-accounts/default/",
-    "/computeMetadata/v1/instance/service-accounts/default/scopes", // Tokens work - but are a security risk to display
-  //      "/computeMetadata/v1/instance/service-accounts/default/token"
-  };
-
-  final String[] metaServiceAcct = {
-    "/computeMetadata/v1/instance/service-accounts/{account}/aliases",
-    "/computeMetadata/v1/instance/service-accounts/{account}/email",
-    "/computeMetadata/v1/instance/service-accounts/{account}/scopes", // Tokens work - but are a security risk to display
-  //     "/computeMetadata/v1/instance/service-accounts/{account}/token"
-  };
-
-  private final String metadata = "http://metadata.google.internal";
-
-  private TemplateEngine templateEngine;
-
-  // Use OkHttp from Square as it's quite easy to use for simple fetches.
-  private final OkHttpClient ok
-          = new OkHttpClient.Builder()
-                  .readTimeout(500, TimeUnit.MILLISECONDS) // Don't dawdle
-                  .writeTimeout(500, TimeUnit.MILLISECONDS)
-                  .build();
-
-  // Setup to pretty print returned json
-  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-  private final JsonParser jp = new JsonParser();
-
-  // Fetch Metadata
-  String fetchMetadata(String key) throws IOException {
-    Request request
-            = new Request.Builder()
-                    .url(metadata + key)
-                    .addHeader("Metadata-Flavor", "Google")
-                    .get()
-                    .build();
-
-    Response response = ok.newCall(request).execute();
-    return response.body().string();
-  }
-
-  String fetchJsonMetadata(String prefix) throws IOException {
-    Request request
-            = new Request.Builder()
-                    .url(metadata + prefix)
-                    .addHeader("Metadata-Flavor", "Google")
-                    .get()
-                    .build();
-
-    Response response = ok.newCall(request).execute();
-
-    // Convert json to prety json
-    return gson.toJson(jp.parse(response.body().string()));
-  }
-
-  @Override
-  public void init() {
-    // Setup ThymeLeaf
-    ServletContextTemplateResolver templateResolver
-            = new ServletContextTemplateResolver(this.getServletContext());
-
-    templateResolver.setPrefix("/WEB-INF/templates/");
-    templateResolver.setSuffix(".html");
-    templateResolver.setCacheTTLMs(1200000L); // TTL=20m
-
-    // Cache is set to true by default. Set to false if you want templates to
-    // be automatically updated when modified.
-    templateResolver.setCacheable(true);
-
-    templateEngine = new TemplateEngine();
-    templateEngine.setTemplateResolver(templateResolver);
-  }
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
