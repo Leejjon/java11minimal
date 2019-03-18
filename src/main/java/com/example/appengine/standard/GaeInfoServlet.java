@@ -15,6 +15,8 @@
  */
 package com.example.appengine.standard;
 
+import com.example.appengine.standard.counter.ShardedCounter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -22,18 +24,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings({"serial"})
-@WebServlet(
-        name = "GAEInfo",
-        description = "GAEInfo: Write info about GAE Standard",
-        urlPatterns = "/"
-)
+@WebServlet(urlPatterns = "/")
 public class GaeInfoServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     try (PrintWriter writer = resp.getWriter()) {
-      writer.println("Hoi");
+      ShardedCounter shardedCounter = new ShardedCounter();
+      shardedCounter.increment();
+      writer.println("Count: " + shardedCounter.count());
     }
   }
 }
