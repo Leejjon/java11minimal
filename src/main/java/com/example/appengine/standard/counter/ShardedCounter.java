@@ -24,9 +24,13 @@ public class ShardedCounter {
     public String getCount() {
         int shardNum = generator.nextInt(NUM_SHARDS);
 
-        KeyFactory keyFactory = DS.newKeyFactory().setKind("poolCounter");
-        Key key = keyFactory.newKey(shardNum);
+        Key key = DS.newKeyFactory().setKind("poolCounter").newKey(Integer.toString(shardNum));
         Entity entity = DS.get(key);
-        return entity.toString();
+
+        if (entity == null) {
+            return "Entity is still null2";
+        } else {
+            return "Shardnum was: " + shardNum + " and count is: " + entity.toString();
+        }
     }
 }
