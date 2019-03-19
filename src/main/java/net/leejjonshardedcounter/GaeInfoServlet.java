@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.appengine.standard;
+package net.leejjonshardedcounter;
 
-import com.example.appengine.standard.counter.ShardedCounter;
+import net.leejjonshardedcounter.ShardedCounter;
 
 import java.io.IOException;
 import java.io.PrintWriter;

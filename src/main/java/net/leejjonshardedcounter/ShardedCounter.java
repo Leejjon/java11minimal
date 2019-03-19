@@ -1,4 +1,4 @@
-package com.example.appengine.standard.counter;
+package net.leejjonshardedcounter;
 
 
 import com.google.cloud.datastore.*;
@@ -56,7 +56,9 @@ public class ShardedCounter {
             incrementedShard = Entity.newBuilder(key).set(COUNT_ATTRIBUTE, 1L).build();
         }
 
-        tx.update(incrementedShard);
+        // Use a put to insert or update.
+        // https://cloud.google.com/datastore/docs/concepts/entities#datastore-datastore-basic-entity-java
+        tx.put(incrementedShard);
         tx.commit();
     }
 }
