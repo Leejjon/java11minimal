@@ -1,4 +1,4 @@
-package net.leejjonshardedcounter;
+package net.leejjon.shardedcounter;
 
 
 import com.google.cloud.datastore.*;
