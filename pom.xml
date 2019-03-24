@@ -40,7 +40,7 @@ Copyright 2019 Google Inc.
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-datastore</artifactId>
-      <version>LATEST</version>
+      <version>1.65.0</version>
     </dependency>
     
     <dependency>
@@ -54,6 +54,25 @@ Copyright 2019 Google Inc.
   <build>
     <finalName>warfile</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <compilerArgs>
+            <arg>--add-modules</arg>
+            <arg>javax.servlet.api,google.cloud.datastore</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.14.v20181114</version>
+        <configuration>
+          <jvmArgs>--jpms</jvmArgs>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
