@@ -17,6 +17,7 @@ package net.leejjon.shardedcounter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutionException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +29,11 @@ public class GaeInfoServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     try (PrintWriter writer = resp.getWriter()) {
-      ShardedCounter shardedCounter = new ShardedCounter();
+      FirestoreCounter shardedCounter = new FirestoreCounter();
       shardedCounter.increment();
       writer.println("Count: " + shardedCounter.count());
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
     }
   }
 }

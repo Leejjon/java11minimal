@@ -1,3 +1,9 @@
+#The stuff below has been deprecated, I migrated to firestore.
+
+gcloud beta emulators firestore start
+
+set FIRESTORE_EMULATOR_HOST=::1:8782
+
 # Sharded counter with Java11 and the new Google Cloud Datastore client.
 
 Since I have been using the Google Datastore, I had a count function based off:
